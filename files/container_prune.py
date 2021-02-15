@@ -5,6 +5,11 @@ import dateparser
 
 STARTING_TIME = str(datetime.now()).split(" ")[0]+ "T" + str(datetime.now()).split(" ")[1] + "Z"
 
+if os.environ.get('LIMIT_HOURS') is None:
+    LIMIT_HOURS = 2.0
+else:
+    LIMIT_HOURS = float(os.environ['LIMIT_HOURS'])
+
 client = docker.from_env()
 api_client = docker.APIClient(base_url='unix://var/run/docker.sock')
 
@@ -16,7 +21,7 @@ def compare_time(run_time,container_started_at):
 
 def eval_interval(interval):
     eval = (interval / 60 ) / 60
-    if eval > 2.0:
+    if eval > LIMIT_HOURS:
         return True
     else:
         return False

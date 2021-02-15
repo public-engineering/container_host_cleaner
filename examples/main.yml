@@ -1,0 +1,5 @@
+---
+- hosts:
+    - docker_hosts
+  roles:
+         - { role: container_host_cleaner, docker_remote_user: "ubuntu" }

@@ -1,0 +1,24 @@
+---
+- name: Upload docker killer script
+  copy:
+    src: container_prune.py
+    dest: "/home/{{ docker_remote_user }}/container_prune.py"
+
+- name: Upload docker killer requirements
+  copy:
+    src: requirements.txt
+    dest: "/home/{{ docker_remote_user }}/requirements.txt"
+
+- name: Install host scripts python requirements
+  pip:
+    requirements: "/home/{{ docker_remote_user }}/requirements.txt"
+    executable: pip3
+  become: false
+
+- name: Runs container_prune.py
+  cron:
+    name: "check dirs"
+    minute: "0"
+    hour: "*/1"
+    job: "python3 /home/{{ docker_remote_user }}/container_prune.py"
+  become: false
